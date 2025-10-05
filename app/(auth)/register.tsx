@@ -95,6 +95,7 @@ const RegisterScreen: React.FC = () => {
         <KeyboardAvoidingView
           style={styles.keyboardContainer}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
         >
           {/* Back Button */}
           <View style={styles.header}>
@@ -106,7 +107,13 @@ const RegisterScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            automaticallyAdjustKeyboardInsets={true}
+            bounces={false}
+          >
             <View style={styles.formContainer}>
               <Text style={styles.title}>Create Account</Text>
               <Text style={styles.subtitle}>Sign up to get started</Text>
@@ -224,13 +231,16 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center",
     padding: 20,
+    paddingTop: 10,
+    paddingBottom: 50,
   },
   formContainer: {
     backgroundColor: "white",
     borderRadius: 12,
     padding: 24,
+    marginTop: 20,
+    marginBottom: 40,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
