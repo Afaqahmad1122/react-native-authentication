@@ -1,6 +1,11 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthResponse, LoginData, RegisterData, User } from "@/types/auth";
+import {
+  AuthResponse,
+  LoginData,
+  RegisterData,
+  ProfileResponse,
+} from "../types/auth";
 
 const API_URL = "http://localhost:3000/auth";
 
@@ -13,7 +18,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem("token");
+    const token = await AsyncStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -29,7 +34,7 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("accessToken");
       await AsyncStorage.removeItem("user");
     }
 
@@ -48,13 +53,13 @@ export const authAPI = {
   },
 
   //   get profile
-  getProfile: async (): Promise<User> => {
+  getProfile: async (): Promise<ProfileResponse> => {
     const response = await api.get("/profile");
     return response.data;
   },
 
   //   google o auth
-  googleAuth: async () => {
+  googleAuth: () => {
     return `${API_URL}/google`;
   },
 };

@@ -3,7 +3,10 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  accessToken: string;
+  googleId?: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface AuthResponse {
@@ -14,6 +17,11 @@ export interface AuthResponse {
 export interface LoginData {
   email: string;
   password: string;
+}
+
+export interface ProfileResponse {
+  userId: string;
+  email: string;
 }
 
 export interface RegisterData {
@@ -34,5 +42,6 @@ export interface AuthContextType {
     firstName: string,
     lastName: string
   ) => Promise<void>;
+  logout: () => Promise<void>;
   error: string | null;
 }
