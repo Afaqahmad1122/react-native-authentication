@@ -43,5 +43,6 @@ export interface AuthContextType {
     lastName: string
   ) => Promise<void>;
   logout: () => Promise<void>;
+  googleLogin: () => Promise<void>;
   error: string | null;
 }

@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authAPI } from "../services/api";
+import { googleAuth } from "../services/googleAuth";
 import { User, AuthContextType } from "../types/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -104,6 +105,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const googleLogin = async () => {
+    try {
+      setError(null);
+      setIsLoading(true);
+
+      const result = await googleAuth.login();
+
+      if (result.success && result.token && result.user) {
+        await AsyncStorage.setItem("accessToken", result.token);
+        await AsyncStorage.setItem("user", JSON.stringify(result.user));
+        setUser(result.user);
+      } else {
+        throw new Error(result.error || "Google login failed");
+      }
+    } catch (error: any) {
+      const errorMessage = error.message || "Google login failed";
+      setError(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const value: AuthContextType = {
     user,
     isLoading,
@@ -111,6 +135,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     register,
     logout,
+    googleLogin,
     error,
   };
 
